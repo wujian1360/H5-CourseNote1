@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+
+
+
+
+
+        //继承模式的讨论：
+
+
+
+        //继承方式一：传统继承链式，不推荐
+        //过多的继承了没用的属性
+        Grand.prototype.lastname = 'ji';
+        function Grand() {
+        }
+        var grand = new Grand();
+
+        Father.prototype = grand;
+        function Father() {
+            this.name = 'hehe';
+        }
+        var father = new Father();
+
+        Son.prototype = father;
+        function Son() {
+        }
+        var son = new Son();
+
+        //遍历对象
+        for (var i in son) {
+            if (son.hasOwnProperty(i)) {
+                console.log(i, ':', son[i]);//自己的属性
+            }
+            console.log(i, ':', son[i]);//能用的属性
+        }
+
+
+
+        //继承方式二：call/apply标准的借用构造函数,工业开发中较为常见
+        //不能继承借用构造函数的原型
+        //每次构造函数都要多走一个函数,降低执行效率
+        function Component1(arg1, arg2) {
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+        }
+        function Component2(arg3, arg4) {
+            this.arg3 = arg3;
+            this.arg4 = arg4;
+        }
+        function Component3(arg5, arg6) {
+            this.arg5 = arg5;
+            this.arg6 = arg6;
+        }
+        function Complate(arg1, arg2, arg3, arg4, arg5, arg6) {
+            Component1.call(this, arg1, arg2);
+            Component2.call(this, arg3, arg4);
+            Component3.call(this, arg5, arg6);
+        }
+        var car = new Complate(10, 20, 30, 40, 50, 60);
+        console.log(car);
+
+
+
+
+
+
+
+        //继承方式三：共享原型，更优
+        //但缺点是：不能随意改动自己的原型,否则所有继承对象全都受影响
+        //又叫公有原型
+        Father1.prototype.lastname = 'Deng';
+        function Father1() {
+            this.age = 18;
+        }
+        function Son1() {
+        }
+        //方式一:直接指向原型
+        //Son1.prototype = Father1.prototype;
+        //方式二:包装成函数 inherit_simple()
+        function inherit_simple(Target, Origin) {
+            Target.prototype = Origin.prototype;
+        }
+        inherit_simple(Son1, Father1);
+        var son1 = new Son1();
+        var father1 = new Father1();
+        console.log(son1['lastname'], father1['lastname']);
+        console.log(son1.lastname, father1.lastname);
+
+
+
+
+
+
+
+
+
+        //继承方式四：圣杯模式 （最优解）
+        //封装函数inherit()
+        function inherit(Target, Origin) {
+            /*
+            先定义一个构造函数F()，作为中转;
+            将中转构造函数的原型prototype指向Origin的prototype.
+            
+            将Target的原型指向“new F()”的新对象，
+            这时，中转函数F构造的对象“new F()”天然继承自Origin，所以它的改变不会影响Origin生成的对象。
+            
+            此时，Target.prototype.constructor也就指向了Origin，这不是我们想要的，改成Target就对了。
+            (Target.prototype.constructor的指向是对象本身的函数结构)
+            
+            为了以后能查到对象继承自哪里，
+            约定俗成的可以给Target.prototype增加一个uber属性，指向Origin.prototype。
+            */
+            function F() { };
+            F.prototype = Origin.prototype;
+            Target.prototype = new F();
+            Target.prototype.constructor = Target;
+            Target.prototype.uber = Origin.prototype;
+        }
+
+        inherit(Son1, Father1);
+        var son1 = new Son1();
+        var father1 = new Father1();
+
+        console.log(son1.__proto__);//Father1()
+        console.log(son1.__proto__.constructor);//Son1(){}
+        console.log(son1.lastname);//"Deng"
+        console.log(son1.__proto__.uber);//Father1.prototype
+
+        console.log(father1.__proto__);//Father1.prototype
+        console.log(father1.__proto__.constructor);//Father1(){}
+
+
+
+
+
+
+
+        //圣杯模式-闭包写法（完美方案）
+        /**
+        1、将变量F私有化：F作为一个中转构造函数，无须外部访问。
+        2、利用闭包原理，函数执行期上下文AO中会将外部变量F私有化。
+        3、立即执行函数将返回一个闭包函数，未来在外部调用才执行。
+        */
+        var inherit_super = (function () {
+            var F = function () {};
+            return function (Target, Origin) {
+                F.prototype = Origin.prototype;
+                Target.prototype = new F();
+                Target.prototype.constructor = Target;
+                Target.prototype.uber = Origin.prototype;
+            }
+        }());
+        // 调用
+        // inherit_super(Son1, Father1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //延伸：私有变量
+        function Obj(name, age) {
+            this.name = name;
+            this.age = age;
+
+            var height = 160;//私有变量
+            this.sayHeight = function () {
+                return height;
+            }
+        }
+        var obj = new Obj('joo', 18);
+
+        console.log(obj.height);//undefined
+        console.log(obj.sayHeight());//160
+        console.log('======')
+
+
+
+
+
+
+        /** 命名空间管理：
+        目的：管理变量，防止污染全局，适用于模块化开发。
+        1、传统命名空间方式
+        定义专门的函数作为整个程序的命名空间，
+        将每个部门的名称定义为对象容器，内包含每个开发者的对象命名空间，以此类推。
+        从而防止变量重名，管理各个层面的全局变量和对象。
+        弊端：变量的调用非常繁琐。官方不推荐使用。
+
+        2、闭包的方式：推荐使用
+           此处正好利用闭包的作用：模块化开发，防止污染全局变量。
+        */
+        var init = (function(){
+            var name = 'joo',
+                height = 600,
+                width = 800;
+
+            function callName(){
+                console.log(name);
+                //return name;//返回，出去打印为undefined
+            }
+            function areaOfSelf(){
+                console.log(height * width);
+                //return height * width;返回，出去打印为undefined
+            }
+            //顺序执行以下方法
+            return function(){
+                callName();
+                areaOfSelf();
+            }
+        }());
+        init();//调用立即执行闭包函数
+        console.log('======')
+
+
+
+        /** 函数的连续调用
+        通过jQuery的例子,看看到函数的连续调用写法：
+            $('div').css('background-color','red').width(100).height(100);
+        实现方式：对象函数定义尾部添加 return this;
+        */
+        var deng = {
+            smoke: function(){
+                console.log('smoking...');
+                return this;
+            },
+            drink: function(){
+                console.log('drinking...');
+                return this;
+            },
+            perm: function(){
+                console.log('permming...');
+                return this;
+            }
+        }
+        deng.smoke().perm().drink().smoke();
+        console.log('======')
+
+
+
+
+
+
+        /** 函数名拼接调用 obj['name']
+        obj.name ====>  obj['name'] 两种访问方式效果等同。
+        后者更灵活，可以实现函数名的拼接
+        */
+        var zhang = {
+            wife1: {name:'liu'},
+            wife2: {name:'zhao'},
+            wife3: {name:'meng'},
+            wife4: {name:'wang'},
+            callWife: function(num){
+                return this['wife' + num];
+            }
+        }
+        console.log(zhang.callWife(2));
+        console.log('======')
+
+
+
+
+        /**
+        for 循环的一些技巧
+        - max先把容器的长度缓存起来，可以大大提升效率
+        - 逐步减至0，使用最少的变量，这样更快
+        - 使用while循环
+        */
+        var i, max,
+            myarray = [10,20,30,40,50];
+
+        for(i=0, max = myarray.length; i < max; i++){
+            console.log(myarray[i]);
+        }
+        console.log('======')
+
+        //使用最少的变量，逐步减至0，这样更快
+        for(i = myarray.length; i--;){
+            //处理myarray[i]
+            console.log(myarray[i]);
+
+        }
+        console.log('======')
+        //使用while循环,也很简单
+        i = myarray.length;
+        while(i--){
+            console.log(myarray[i]);
+        }
+        console.log('======')
+
+
+
+
+
+
+        /** 枚举：
+        for-in 循环：遍历一个对象的属性,系统自带属性除外
+        hasOwnProperty()：判断对象是否拥有某个属性，只能访问自定义的自身属性。
+        in：同上，'name' in worker  一个属性是否存在，判断的范围是原型链上的所有对象,这个不常用
+        instanceof：用法，A instanceof B ，判断 B 是不是 A对象 的构造函数。这里B可以是A原型链上的所有构造函数。
+        */
+        var worker = {
+            name: '13',
+            age: 18,
+            sex:'male',
+            height:180,
+            weight:75,
+            __proto__:{  //手动给[原型链]添加的属性，for-in都能遍历出来。
+                lastname:'kang',
+            }
+        }
+        // 手动给原型添加属性，for-in会显示出来，hasOwnProperty()可以避免。
+        // worker.hasOwnProperty(key) 此方法判断worker每一个手动添加属性是不是自身的
+        for (key in worker){
+            if(worker.hasOwnProperty(key)){
+                console.log(key + ' : '+ worker[key]);//容易写错成：worker['key'], worker.key
+            } 
+        }
+        console.log('======');
+        //in :判断'属性'是否属于对象的原型链，这个不常用，因为判断的范围是原型链上的所有对象
+        console.log('lastname' in worker); //true
+        console.log('name' in worker); //true，name是原型上的属性
+        console.log('======');
+
+        function WorkerOfOffice(){
+        }
+        inherit_super(WorkerOfOffice,Son);
+        var officer = new WorkerOfOffice();
+
+
+
+        //instanceof：用法，A instanceof B   (A对象与B构造函数有无血缘关系)
+        //判断 A对象的原型链上有没有 B原型。这里B可以是A原型链上的所有构造函数的原型。
+        console.log(worker instanceof Object); //true,说明worker原型链上有Object的原型,所有对象都源于Object的原型
+        console.log(worker instanceof Array); //false,说明worker对象原型链上没有Array的原型
+        console.log(officer instanceof WorkerOfOffice);//true
+        console.log(officer instanceof Father);//true
+        console.log(officer.name);// hehe
+        console.log('======');
+
+
+
+        //思考题：判断一个未知对象是 [] 还是 {} 。三种方式
+        console.log(typeof( [] ));//object
+        console.log(typeof( {} ));//object
+        var a = {}, b = [];
+        //拿它们跟Array比较，看看a是不是数组
+        console.log(b instanceof Array); //方法1
+        //比对各自的constructor
+        console.log(a.constructor);//方法2
+        //比对各自的toString方法
+        console.log(a.toString());// ƒ Array() { [native code] }
+        console.log(b.toString());// [object Object]
+        /**
+        方法3：直接调用不行，因为Object和Array分别都有自己的toString方法,返回值不能直接比对。
+        这里需要用到call，用Object原型中的toString函数去调用call方法，
+        这样就能让Array调用Object的toString方法了。
+        两个对象使用同样的toString方法，才能正常比对。
+        */
+        console.log(Object.prototype.toString.call(b)); //[object Array]
+        console.log(typeof(Object.prototype.toString.call(b))); // string
+        console.log('======');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>

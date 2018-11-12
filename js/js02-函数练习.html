@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<script type="text/javascript">
+
+//要求输入一串数字，低于十位，输出这串数字的中文大写 9 9999 9999
+//
+//没写出来？？？？？？
+function transfer(target){
+	switch(target){
+		case "0":
+		    return "零"
+		case "1":
+		    return "壹"
+		case "2":
+		    return "贰"
+   		case "3":
+		    return "叁"
+		case "4":
+		    return "肆"
+   		case "5":
+		    return "伍"
+		case "6":
+		    return "陆"
+   		case "7":
+		    return "柒"
+		case "8":
+		    return "捌" 
+   		case "9":
+		    return "玖"      		            		           		
+	}
+}
+function reverse(){
+	var num = '12045'
+    var wei = ["拾","佰","仟","萬"]
+	//window.prompt('input')
+	var str = ''
+	var j = 0;
+	for (var i = num.length-1; i>=0; i--){
+		t = transfer(num[i])
+		str += t
+		str += wei[j]
+		j++;
+    }
+	console.log(str)
+
+}
+reverse()
+
+
+
+
+</script>
+
+
+
+
+</body>
+</html>

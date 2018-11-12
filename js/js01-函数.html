@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>js函数</title>
+	</head>
+
+	<body>
+
+	<script type="text/javascript">
+
+		// function test(){
+		// 	var a = 123;
+		// 	var b = 234;
+		// 	var c = a + b;
+		// 	document.write(c)
+		// }
+		// 
+		//第一种函数声明
+		function b(){
+			document.write('第一种方式')
+		}
+		//第二种匿名函数表达式--函数表达式--最常用
+		var a = function(){
+			document.write('hello world!')
+		}
+
+		var suma = function(n,m){
+			//document.write(n + m);
+			return n + m; 
+
+		}
+
+		function sumb(a){
+			// arguments -- [1,2,3]隐含一个实参列表用来接收多出来的实参。
+			// console.log(arguments.length);
+			// console.log(arguments);
+			for (var i = 0; i < arguments.length; i++) {
+				console.log(arguments[i]);
+			}
+			//sumb.length 这是形参的长度。函数名本身代表一个数组
+			console.log(sumb.length,a);
+			
+		}
+
+		sumb(11,22,33);
+
+
+        //传不定参数，求和
+		function sumResult(){
+			var result = 0;
+			for (var i = 0; i < arguments.length; i++) {
+				result += arguments[i]
+			}
+			console.log(result);
+
+		}
+		sumResult(1,2,3,4,5,6,7,8,9,10);
+
+		function p(a,b){
+			//arguments中的元素，和形参保存的值互为映射关系，但不是同一个变量
+			console.log(a);//此处输出33
+			arguments[0] = 34;//改为34
+			console.log(a);//输出34
+
+		    //如果没有定义实参，那么相对应的形参值就为undefined。并且函数内部不可追加
+			console.log(arguments[1]);//此处输出undefined
+		}
+		p(33);
+
+		function n(){
+			return arguments;
+		}
+		console.log(n(2,3,3,6));
+
+		function myNumber(targets){
+			return +targets;
+		}
+		console.log(myNumber('123'))   
+
+		console.log(typeof(myNumber('123'))) 
+		console.log(typeof 123) 
+
+
+
+		function scream(animal){
+			switch(animal){
+				case "dog":
+					console.log('wangwangwang')
+					return
+				case "cat":
+					console.log('miaomiaomiao')
+					return
+				case "sheep":
+					console.log('mememe')
+					return       
+			}
+		}
+		scream("cat")
+
+//将输入的数字翻转，然后汉字输出
+        function transfer(target){
+        	switch(target){
+        		case "1":
+        		    return "壹"
+        		case "2":
+        		    return "贰"
+	       		case "3":
+        		    return "叁"
+        		case "4":
+        		    return "肆"
+	       		case "5":
+        		    return "伍"
+        		case "6":
+        		    return "陆"
+	       		case "7":
+        		    return "柒"
+        		case "8":
+        		    return "捌" 
+	       		case "9":
+        		    return "玖"
+      		           		            		           		
+        	}
+        }
+
+		function reverse(){
+			var num = window.prompt('input');
+			var str = "";
+			for (var i = num.length-1; i>=0; i--){
+				str += transfer(num[i]) 
+		    }
+		    console.log(str)
+		}
+
+		reverse()
+
+
+		///////////////////////////////////////////////////////////////////
+		///
+		///递归实现：阶乘：n*(n-1) 如果n=5 那么5*4*3*2*1=120
+		function jc(n){
+			if(n==1){
+				return 1;
+			}
+			return n * jc(n-1);
+		}
+
+		console.log(jc(5))
+
+
+		///实现斐波那契数列 
+		/// f0 = 0  f1 = 1  f(n)=f(n-1)+f(n-2)
+		/// 
+		// function fibonacci(m,n){
+		// 	if (m===0&&n===0){
+		// 		return 1
+		// 	}
+
+		// 	return fibonacci(m,m+1)
+		// }
+
+
+
+		
+
+
+
+
+		
+
+
+		
+
+
+
+
+
+
+
+
+
+	</script>
+
+	</body>
+</html>

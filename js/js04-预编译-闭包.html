@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>精解作用域、闭包</title>
+</head>
+<body>
+
+
+
+<script type="text/javascript">
+
+console.log('=======闭包')
+
+//函数定义和执行时会建立执行期上下文
+//执行期上下文的集合[[scope]]是唯一的
+//
+// a defined a.[[scope]] ==> 0:GO
+// 
+// a doing   a.[[scope]] ==> 0:AO
+//                           1:GO 
+//                         
+// b defined b.[[scope]] ==> 0:AO
+//                           1:GO
+//                         
+// b doing   b.[[scope]] ==> 0:AO
+//                           1:AO
+//                           2:GO 
+//                           
+//                           
+function a(){
+	function b(){
+		var bbb = 234;
+		console.log(aaa);
+	}
+	var aaa = 123;
+	return b;
+}
+var glob = 100;
+var demo = a();
+demo();
+
+console.log('=======')
+
+
+
+function a1(){
+	var num = 100;
+	function b1(){
+		num++;
+		console.log(num);
+	}
+	return b1;
+}
+var demo1 = a1();
+demo1();
+demo1();
+
+console.log('=======一对二的闭包,有点像类定义的结构');
+
+function add_jian(){
+	var num = 100;
+	function a(){
+		num++;
+		return num;
+		//console.log(num);
+		
+	}
+	function b(){
+		num--;
+		return num;
+		//console.log(num);
+
+	}
+	return [a,b];
+}
+var myScore = add_jian();
+console.log(myScore[0]())
+console.log(myScore[1]())
+
+
+
+console.log('=======立即执行式的函数,临时函数');
+//一次性函数（又叫初始化函数）:执行完立即销毁，针对初始化功能的函数
+(function (){
+	var a = 10;
+	var b = 20;
+    console.log(a + b);
+}());
+
+//有实参、形参
+(function (arg){
+	var a = 10;
+	var b = 20;
+    console.log(a + b * arg);
+}(2));
+
+//有返回值
+num1 = (function (arg1,arg2,arg3){
+	var x = arg1 + arg2 + arg3;
+    return x;
+}(2,3,4));
+console.log(num1); 
+
+//标准写法
+(function(){}());//w3c建议第一种
+(function(){})();
+
+//函数声明
+//1、只有表达式才能被()执行符号执行
+function test(){
+	var a = 123;
+	console.log(a);
+}
+test();
+
+//此为函数表达式，后面加执行符号()就能立即执行
+//能被执行符号执行的表达式，这个表达式的名字就会自动被忽略，它也就成了立即执行函数！！
+var test1 = function(){
+	var a = 456;
+	console.log(a);
+}();//加了(),它也就成了立即执行函数！！
+// test1();//报错
+var test2 = function(){
+	return 111;
+}();
+console.log(test2);
+
+// 在函数定义前加上+，代表转换为数字表达式的趋势，
+// 所以函数可以立即执行，-减号运算符也可以。同理()也可以,并放弃函数名
+// 函数立即执行后就不可被调用，也就变成了立即执行函数的另一种形式。
++ function test3(){
+	console.log('aaa');
+}();
+!!- function(){
+	console.log('bbb');
+}();
+
+(function(){}());
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

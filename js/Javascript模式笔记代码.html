@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<script>
+//for-in例子
+
+var man = {
+    hands:2,
+    legs:2,
+    heads:1
+};
+if(typeof(Object.prototype.clone === 'undefined')){
+    Object.prototype.clone = function(){
+        console.log('hello');
+    };
+}
+man.clone();
+//不用hasOwnProperty(),就能遍历出Object的方法clone()
+for(var i in man){
+    console.log(i,':',man[i]);
+}
+//使用hasOwnProperty()
+for(var i in man){
+    if(man.hasOwnProperty(i)){//过滤，是否自己的函数
+        console.log(i,':',man[i]);
+    }
+}
+
+//在Object.prototype中调用hasOwnProperty()
+for(var i in man){
+    if(Object.prototype.hasOwnProperty.call(man,i)){
+        console.log(i,':',man[i]);
+    }
+}
+
+if(typeof(Object.prototype.myMethod !== 'function')){
+    Object.prototype.myMethod = function(){
+        //添加代码
+    }
+}
+
+
+var inspect_me = 0;
+    result = '';
+
+switch(inspect_me){
+    case 0:
+        result = 'zero';
+        break;
+    case 1:
+        result = 'one';
+        break;
+    default:
+        result = 'unknown';
+}
+console.log(result);
+
+eval("console.log('abcde');");
+
+
+console.log(typeof un);//undefined
+console.log(typeof deux);//undefined
+console.log(typeof trois);//undefined
+var jsstring = "var un = 1; console.log(un);";
+eval(jsstring);//1
+
+var jsstring = "var deux = 2; console.log(deux);";
+new Function(jsstring)();//2
+
+var jsstring = "var trois = 3; console.log(trois);";
+(function(){
+    eval(jsstring);
+}());//3
+
+console.log(typeof un);//number
+console.log(typeof deux);//undefined
+console.log(typeof trois);//undefined
+
+(function(){
+    var local = 1;
+    eval("local = 3;console.log(local)");//3
+    console.log(local);//3
+}());
+(function(){
+    var local = 1;
+    Function("console.log(typeof (local));")();//3
+}());
+
+</script>    
+</body>
+</html>

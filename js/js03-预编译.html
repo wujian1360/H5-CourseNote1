@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>预编译</title>
+</head>
+<body>
+
+
+
+<script type="text/javascript">
+//预编译上下文的例子
+//总结：先建立AO，提升变量声明，传实参，提升函数声明和值，最后依次执行整个函数体。
+//
+//1.建立AO对象 
+//2.提升变量声明
+//3.统一形参和实参
+//3.提升函数声明和值
+//4.执行
+//
+//1、建立AO对象（执行上下文）：函数执行的一个存储空间库
+//   AO｛｝
+//2、找形参和变量声明，并把形参和变量声明的名作为AO对象的属性名
+//   此处括号中的a，与函数内部声明的var a重复。两个值都为undefined
+//   AO｛
+//       a:undefined
+//       b:undefined
+//   ｝
+//3、形参和实参的值相统一（把实参的值传到形参里去）这里形参a为1
+//   AO｛
+//       a:1
+//       b:undefined
+//   ｝
+// 4、在函数体里找函数声明，把函数声明的名作为属性填入AO，并用新的值覆盖.
+//    AO对象建立完成。
+//   AO｛
+//       a:function  a(){}
+//       b:undefined
+//       d:function  d(){}
+//   ｝  
+// 5、函数执行： 
+function fn(a){
+	console.log(a); //a: function a(){} //根据AO内容，a:a(){}
+
+	var a = 123;//属性a变量声明已经提升了。这里只给a赋值123
+
+	console.log(a);//a: 123
+
+	function a(){}//忽略，函数声明已经被提升了
+
+	console.log(a);//a: 123
+
+	var b = function(){}//属性b变量声明已经提升了。这里只给b赋值function(){}
+
+	console.log(b)//b: function(){}
+
+	function d(){}//忽略，函数声明已经被提升了
+
+	console.log("=====================")
+}
+fn(1);
+
+
+
+//第二个例子
+function fn2(a,b){
+	console.log(a);
+	c = 0;
+	var c;
+	a = 3;
+	b = 2;
+	console.log(b);
+	function b(){}
+	function d(){}
+	console.log(b);
+	console.log("=====================")
+
+}
+fn2(1)
+
+//1、建立AO，提升变量声明
+// AO{
+//     a:undefined
+//     b:undefined
+//     c:undefined
+//     
+// }
+// 2、统一实参形参
+// AO{
+//     a:1
+//     b:undefined
+//     c:undefined
+// }
+// 3、提升函数声明，并赋值
+// AO{
+//     a:1
+//     b:function b(){}
+//     c:undefined
+//     d:function d(){}
+// }
+// 4、顺序执行函数
+// AO{
+//     a:3
+//     b:2
+//     c:0
+//     d:function d(){}
+// }
+// 结果：
+// 1
+// 2
+// 2
+
+
+
+
+//第三个例子
+function fn3(a,b){
+	console.log(a);//function a(){}
+	console.log(b);//undefined
+	var b = 234;
+	console.log(b);//234
+	a = 123;
+	console.log(a);//123
+	function a(){}
+	var a;
+	b = 234;
+	var b = function(){}
+	console.log(a);//123
+	console.log(b);//function(){}
+}
+fn3(1)
+
+//1.建立AO，提升变量声明
+//AO{
+//    a:undefined
+//    b:undefined
+//}
+//2.统一形参实参
+//AO{
+//    a:1
+//    b:undefined
+//}
+//3.提升函数声明和值
+//AO{
+//    a:function a(){}
+//    b:undefined
+//}
+//4.依次执行函数体
+//AO{
+//    a:function a(){}
+//    b:undefined
+//}
+//输出：
+//function a(){}
+//undefined
+//234
+//123
+//123
+//function(){}
+//
+//找变量声明，形参先赋值，找函数声明并赋值，执行函数。
+console.log("=====================")
+
+//全局函数 预编译
+//
+//1.建立GO对象 global object（GO === window）
+//2.提升变量声明
+//3.提升函数声明和值
+//4.执行
+console.log(a);
+var a = 123
+function a(){}
+console.log(a);
+console.log(window.a);
+
+console.log("=====================")
+
+//一个变量没经过声明就赋值了，就贵归window所有。
+b = 100
+console.log(window.b)
+
+function k(){
+	var s = c = 200;//s被声明，而c没有，c为暗示全局变量
+	console.log(c)//此处访问的是全局变量c
+}
+k();//函数必须被调用
+console.log(window.c)//c的值为200，可以访问，说明已经声明为全局变量了，
+console.log(window.s)//访问不到
+
+console.log("=====================")
+
+
+
+
+
+
+
+
+
+//练习题
+function bar(){
+	return foo;
+	foo = 10;
+	function foo(){}
+	var foo = 11;
+}
+console.log(bar());
+
+console.log("=====================")
+
+console.log(bar1())
+function bar1(){
+	foo = 10;
+	function foo(){}
+	var foo = 11;
+	return foo;
+}
+
+console.log("=====================")
+//先看外面：
+//GO{
+//    a:100
+//    demo:function(){}   
+//}
+//AO{
+//    e:1
+//    b:und
+//    c:und
+//    a:und
+//}
+//顺序：先执行外部，在执行内部
+//注意：if语句内不能声明函数
+a = 100;
+function demo(e){
+	function e(){}//e:func
+	arguments[0] = 2;//e:2
+	console.log(e);//e:2
+
+	var b = 123;//b:123
+	function c(){}//c:func
+
+	var c;//不看
+	a = 10;//a:10
+	var a;//不看
+	console.log(b);//b:123
+	f = 123;//给GO添加一个暗示全局变量f：123
+	console.log(c);//c:func
+	console.log(a);//a:10
+}
+var a;
+demo(1);
+console.log(a);//a:100
+console.log(f);//f:123
+
+console.log("=====================")
+
+
+
+//很变态 
+var x = 1;
+if(function f(){}){
+	x += typeof (f);
+}
+console.log(x)
+
+console.log("=====================")
+
+
+
+var bb = function aa(){
+	return 23;
+}
+console.log(typeof(aa)) //undefined
+
+
+
+
+
+
+</script>
+
+
+
+
+</body>
+</html>

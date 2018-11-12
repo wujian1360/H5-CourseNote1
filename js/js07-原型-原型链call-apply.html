@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+</head>
+<body>
+<script type="text/javascript">
+
+//原型--函数出生的时候就定义了。
+//他定义了构造函数制造出的对象的公共祖先。
+// Person.prototype = ｛｝原型是祖先,也是对象
+function Person(){
+    this.lastName = 'ji';//覆盖原型的lastName
+}
+Person.prototype.name = 'hehe';
+Person.prototype.lastName = 'Deng';
+var person = new Person();
+var person1 = new Person();
+console.log(person.name,person.lastName); 
+console.log(person.name,person1.lastName);
+
+//特点
+Person.prototype.say = function(){
+    console.log('haha');
+}   
+person.say();
+
+// 原型的修改，只能用原型的prototype修改，
+// 通过对象上直接修改，本质上是为对象添加新属性，原型不受影响
+
+// Car.prototype.name = 'bmw';
+// Car.prototype.height = 1400;
+//原型的另一种写法
+Car.prototype = {
+    name : 'bmw',
+    height : 1400,
+}
+function Car(){
+}
+var car = new Car();
+car.name = 'jojo';
+console.log(car.name);//对象增加了一个新的name属性覆盖祖先的name属性。
+console.log(Car.prototype.name);//圆形的name属性不受影响。
+
+//constructor返回对象的构造器，
+//Car.prototype隐式生成的属性
+//对象.constructor的指向可以手动更改，指向别的构造函数
+console.log(car.constructor);
+//__proto__指向的就是原型
+console.log(car.__proto__);
+
+//访问属性，会先去找自己构造函数的，入伏偶没有就回去找__proto__：SomeOne.prototype
+SomeOne.prototype.name = 'abc';
+function SomeOne(){
+    // var this  = {
+    //     __proto__:SomeOne.prototype;
+    // }
+}
+var someone = new SomeOne();
+console.log(someone.name);
+//新建一个对象
+var obj = {
+    name:'bcd',
+}
+//原先指向 someone.__proto__ = SomeOne.prototype 
+someone.__proto__ = obj;  //someone对象继承自obj了
+console.log(someone.name); 
+
+//下面这两种创建对象的方式等同：
+// var obj = {};
+// var obj = new Object();//一般不用
+//obj.__proto__ ---> Object.prototype(原型链的终端)
+console.log(obj.constructor); 
+//访问object对象的构造器，还会返回对象自己
+
+// SomeOne.prototype = {} --> Object.prototype
+// function SomeOne(){
+//     // var this  = {
+//     //     __proto__:SomeOne.prototype;
+//     // }
+// }
+
+// Object.create(原型对象)//也能创建对象
+var sun = {
+    name:'sunny',
+    age:12,
+    say:function(){
+        return this.name;
+    }
+};
+var sonOfsun = Object.create(sun);
+console.log(sonOfsun.name);
+sonOfsun.name = 'hello';
+console.log(sonOfsun.say());
+
+//没有原型的对象
+//通过Object.create(null)可以构造出一个没有原型的对象。
+var obj = Object.create(null);
+console.log(obj);//可以得到一个没有原型的对象，这是一个例外。
+//即使人为加上的__proto__,系统不认，也就不能用来继承。
+
+
+// toString()方法  【重写】
+//这两种东西不是对象，所以没有toString()方法。
+// null.toString();
+// undefined.toString();
+
+// 123.toString() 不行,因为 . 首先识别成浮点类型
+var num = 123;
+//num.toString(); --> new number(num).toString();//Number的tostring方法是重写的
+//Number.prototype.toString() = function(){Number重写的方法};
+console.log( typeof(num.toString()) );
+
+var obj = {};
+console.log(obj.toString());//返回 [Object Object]
+
+//每一种对象都可以重写祖先的toString()方法。
+var a = Object.prototype.toString.call(num);//调用顶端的toString()方法。
+console.log(a);//返回 [object Number]
+var a = Object.prototype.toString.call(true);
+console.log(a);//[object Boolean]
+
+//document.write();方法其实就是在调用对象的 toString()方法
+var obj = Object.create(null);
+obj.toString = function(){
+    return '你好啊，找我吗？'
+}
+document.write(obj);
+
+console.log(0.14 * 100); //14.000000000000002,  js中的bug，只有0.14会出现偏差
+//向上向下取整,ceil天花板，floor地板
+console.log(Math.floor(1.42));
+console.log(Math.ceil(1.42));
+//0~1之间随机数,并保留两位小数
+console.log(Math.random().toFixed(2) * 100);//会随机出现精度小偏差,道理同上。
+console.log(Math.floor(Math.random() * 100));//先*100，在取整就可以
+
+//可正常计算的范围：小数点前16位，后16位。
+
+
+// call / apply
+// 改变 this 指向
+
+// 定义一个方法，并调用它，其实是隐含的调用了call()方法
+function test(){
+    console.log('ok');
+}
+test();  
+test.call();//等同
+
+//call在对象中的应用：
+//call的根本作用就是改变this指向
+
+//建立构造函数Per
+function Per(name,age){ 
+    this.name = name;
+    this.age = age;
+}
+//new一个对象per
+var per = new Per('deng',18);
+
+//生成一个对象obj
+var obj = {
+    width : 100,
+    height : 200,
+};
+//调用call()
+Per.call(obj,'anna',19);
+//它会让Per里面预设的this全变成obj
+//最终对象obj拥有两个对象的所有属性
+//有点像用Per把对象obj扩展了
+// new Per(...)  ==>  Per.call() 就是新建一个per对象
+// Per.call(obj, ...);给obj对象添加Per的所有属性
+var per2 = new Per('qq',66);
+ //原来的Per照常使用。
+
+
+//新的例子：
+//一个构造函数Worker
+ function Worker(){
+     this.toWork = function(){
+         console.log('working...');
+     }
+ }
+//创建对象
+var worker = new Worker();
+//用Per扩展worker的属性和方法
+Per.call(worker,"wang",41);
+worker.toWork();
+//一个构造函数Bird
+function Bird(n){ 
+    this.n = n;
+    this.tofly = function(){
+        console.log(this.n + 'I can fly...');
+    }
+}
+//用Bird再次扩展worker的属性和方法
+Bird.call(worker,2);
+worker.tofly(2);
+worker.name = 'li';
+//最后的worker对象除了拥有自己的功能和属性外，
+//还拥有Per和Bird的所有功能和属性。
+//而原来的Per和Bird构造方法都不变。
+var per = new Per('zhang',99);
+var bir = new Bird(3);
+console.log(per);
+console.log(worker);
+console.log(bir);
+bir.tofly();
+
+
+
+//所以最终的继承和扩展写法为：
+function Person(name,age,sex){
+    this.name = name;
+    this.age = age;
+    this.sex = sex;
+    this.toRun = function(){
+        console.log('running...');
+    }
+}
+function Student(name,age,sex,tel,grade){
+    // 当new一个对象，时 ===>  var this = {...}
+    Person.call(this, name, age, sex);
+    //调用Person的call方法，将Person的this指向当前的this，也就实现了Person的功能。
+    this.tel = tel;
+    this.grade = grade;
+}
+var stu = new Student('joo',18,'male',13988888000,2017);
+stu.toRun();
+
+
+//标准的分组构造函数
+function Component1(arg1,arg2){
+    this.arg1 = arg1;
+    this.arg2 = arg2;
+}
+function Component2(arg3,arg4){
+    this.arg3 = arg3;
+    this.arg4 = arg4;
+}
+function Component3(arg5,arg6){
+    this.arg5 = arg5;
+    this.arg6 = arg6;
+}
+function Complate(arg1,arg2,arg3,arg4,arg5,arg6){
+    Component1.call(this,arg1,arg2);
+    Component2.call(this,arg3,arg4);
+    Component3.call(this,arg5,arg6);
+}
+var car = new Complate(10,20,30,40,50,60);
+console.log(car);
+
+// apply 传参列表不同，也是改变this指向的。
+// Component1.apply(this, [arg1, arg2]);
+
+//思考题：能否打印出 1,2,3,4,5 ？
+function foo(){
+    bar.apply(null,arguments);
+}
+function bar(){
+    console.log(arguments);
+}
+foo(1,2,3,4,5);
+//可以，为什么？
+ 
+
+
+
+
+
+
+</script> 
+</body>
+</html>

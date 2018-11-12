@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<script type="text/javascript">
+//定义：闭包
+//当内部函数被保存到外部时，将会生成闭包。
+//闭包会导致原有作用域链不释放。造成内存泄漏（占用）
+
+//闭包导致的现象：
+//test函数在定义的时候，形成了自己作用域链[[scope]]的AO上下文。
+//在上下文中用for循环定义了一个i变量和函数体。
+//每一个函数体都使用自身函数外部唯一的变量i。
+//所以当闭包函数执行时，访问的就是：自身作用域链[[scope]]顶端的AO 中的i，指向唯一那个i的值。
+function test(){
+	var arr = [];//定义一个数组
+	for (var i = 0; i < 10; i++) {//定义10个还没有执行的函数体装进数组。
+		arr[i] = function(){
+			document.write(i + ' ');
+		}//循环结束，i此时已经为10.
+	}
+	return arr;//返回装满10个函数的数组
+}
+var myArr = test();//将数组赋值给myArr
+//此时开始逐个执行数组中的10个函数体，
+for (var j = 0; j < myArr.length; j++) {
+	myArr[j]();	//每个函数体中的i此时都已经是10了。
+}//所以最终输出：10个10
+
+document.write('=======')
+
+//一对十的闭包，一对十的复制i
+//给每一个要定义的闭包函数体包裹一个立即执行函数。
+//通过这一方式，在立即执行函数的AO中，分别复制了每一个实参i的变化的值。  
+//这个值保存在j中（自身作用域链[[scope]]的AO上下文顶部）
+//当闭包函数执行时，就会找到j的值
+//如此，就改变了原来10个闭包函数共享一个外部变量i的局面
+function test2(){
+	var arr = [];
+	for (var i = 0; i < 10; i++) {
+        //立即执行函数，包裹要传到外部执行的函数
+        //同时，形成函数上下文AO，记录每一个i的值穿给arr[i]
+		(function(j){//j为形参
+			arr[j] = function(){//此函数不会立即执行，而是将其引用传给数组arr
+			document.write(j + ' ');
+		    }
+		}(i))//此处获取实参i
+
+	}
+	return arr;
+}
+//如此一来，通过包裹一层立即执行函数的方法，保留了实参i
+//当分别执行数组myarr中的10个函数时，就能获取原先定义i的值了
+var myArr = test2();
+for (var i = 0; i < myArr.length; i++) {
+	myArr[i]();	
+}
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>

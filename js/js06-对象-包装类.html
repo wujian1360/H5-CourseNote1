@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<script type="text/javascript" langugen=JavaScript>
+
+//对象的基本操作
+var mrDeng = {
+
+	name : "MrDeng",
+	age : 40,
+	sex : "male",
+	health : 100,
+
+	smoke : function(){
+		console.log("I am smoking!");
+		this.health --;
+	},
+	drink : function(){
+		console.log("Drink...");
+		this.health ++;
+	}
+
+}
+
+//属性的增删改查
+//增加
+mrDeng.wife = 'xiaomei';
+console.log(mrDeng.wife)
+//修改
+mrDeng.wife = 'gang'
+console.log(mrDeng.wife)
+//删除
+delete mrDeng.wife;
+console.log(mrDeng)
+
+console.log('======')
+//例子
+var deng = {
+	prepareWife:'wang',
+	name:"laodeng",
+	sex:"male",
+	gf:"xiaoliu",
+	wife:'',
+	divorce : function(){
+		delete this.wife;
+		this.wife = this.prepareWife;
+
+	},
+	getMarried : function(){
+		this.wife = this.gf;
+	},
+	changeGf : function(someone){
+		this.gf = someone;
+
+	}
+}
+
+deng.getMarried();
+console.log(deng.wife);
+deng.divorce();
+console.log(deng.wife,deng.prepareWife)
+deng.changeGf("li");
+console.log(deng.gf);
+deng.getMarried();
+console.log(deng.wife);
+console.log('======')
+
+//对象创建方法
+//1.var obj = {}  plainObject 对象字面量/对象直接量
+//
+//2.构造函数 
+//    1）系统自带的构造函数 Object()  Array()  Number() ....
+//        var obj1 = new Object();
+//        var obj1 = {}; 
+var obj = new Object();
+obj.name = "abc";
+obj.age = 18;
+obj.saySelf = function(){
+	console.log(this);
+}
+obj.saySelf();
+
+
+//    2) 自定义构造函数
+//        1.严格执行大驼峰命名规则
+//        
+//        前提：必须加new
+//        1.在函数体第一行加上：var this = {};
+//        2.依次执行 this.xxx = xxx;
+//        3.隐式返回 this
+//        
+function Car(color){
+	//var this = {};
+	this.color = color;
+	this.name = 'BMW';
+	this.height = '1400';
+	this.lang = '4900';
+	this.weight = 1000;
+	this.health = 100;
+	this.run = function(){
+		this.health --;
+		console.log('健康值：'+ this.health);
+	}
+	// return this;
+}
+var car = new Car('red');
+car.run();
+console.log(car);
+
+console.log('======')
+
+
+
+
+
+
+
+
+
+
+//对象和简单数值是不同的
+//字符串对象，与 简单字符串，是不一样的
+
+
+//创建一个string对象，可以添加属性和方法。
+var str1 = new String('www');
+str1.a = 1;
+str1.print =  function(s){
+	console.log(str1);
+	console.log(s);
+}
+str1.print('abc');
+
+console.log('======')
+
+//原始值没有属性和方法，为何会可以访问length？
+var str2 = 'abcd';
+console.log(str2.length);
+str2.a = 'bbb';
+console.log(str2.a);//能访问，不能赋值
+
+
+
+//包装类
+//当访问一个简单数值的属性的时候，
+//系统会自动生成一个对象为其赋值，然后再删除。
+//这个过程叫做调用包装类，赋值无效
+var num = 4;
+num.len = 3;
+//隐式：new Number(4).len = 3;
+console.log(num.len);
+
+
+console.log('======')
+//字符串是原始值，不能像array那样用length截断
+var str3 = 'abcd';
+console.log(typeof(str3));
+str3.length = 2;
+//new String('abcd').length = 2;  delete
+//系统重新new了一个string对象，length赋值，然后删除。
+console.log(str3);
+console.log(str3.length)//系统自带属性length，字符串自身就有
+
+var arr = [99,2,3,4,5,6,7,8];
+arr.length = 3;
+console.log(arr);
+
+console.log('======');
+
+
+
+
+
+
+
+//测试题
+var str4 = 'abc';
+str4 += 1;
+var test1 = typeof(str4);//test1就是一个原始字符串，长度为6
+if(test1.length == 6){
+	//console.log('进来了');
+	//问题在这里，原始字符串不能赋值
+	test1.sign = 'typeof的返回结果可能为String';
+}
+//所以访问结果为 undefined
+console.log(test1.sign);
+
+// typeof(xxx) 返回值只有6类。
+	// 1.String
+	// 2.Number
+	// 3.Boolean
+	// 4.undefined
+	// 5.Object
+	// 6.function
+
+
+console.log('======');
+
+//测试题
+var x = 1, y = z = 0;
+function add(n){
+	return n = n + 1;
+}
+y = add(x);
+function add(n){
+	return n = n + 3;
+}
+z = add(x);
+
+console.log(x,y,z);
+
+
+console.log('======');
+
+(function foo(x){
+	console.log(arguments);
+	return x;
+})(1,2,3,4,5);
+
+
+
+console.log('======');
+
+var n = parseInt(11,8);//返回十进制数：为 9，就是8进制的 11，
+console.log(n);
+
+console.log('======');
+
+
+//写一个方法，求一个字符串的字节数：
+//英文占一个字节，中文占两个字节
+//charCodeAt(i)方法可以返回指定位置字符的Unicode编码。
+//Unicode编码(0 ~ 65535)之间的整数：中文 <= 255，英文 > 255 .
+var str6 = 'I am a designer! 也就是设计师！'
+var str7 = 'abc你好！'
+
+function stringLengthOf(str){
+	var n = 0;
+	for (var i = 0; i < str.length; i++) {
+		if(str.charCodeAt(i) > 255) {
+			n += 2;
+		}else {
+			n += 1;
+		}
+	}
+	return n;
+}
+var len = stringLengthOf(str6);
+console.log(len) ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
