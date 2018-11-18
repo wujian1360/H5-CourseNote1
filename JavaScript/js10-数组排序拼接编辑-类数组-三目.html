@@ -198,13 +198,42 @@ num.abc = 'wu';
 */
 
 
-
-
-
 /**作业：字符串去重
 */
 
 
+
+/**
+* 在try里面发生的错误，不会执行后面的代码，
+* 会将错误信息生成一个error对象，
+* 在catch中去操作。然后继续执行后面的代码
+*/
+var e;
+try {
+    console.log('a');
+    console.log(b);
+    console.log('c');
+} catch (error) {
+    console.log(error.name,' ',error.message);
+    console.log(error);
+    e = error;
+}
+console.log(typeof(e));
+
+
+/**
+* ES5 严格模式
+* 不兼容ES3的不规则语法，使用全新的ES5规范
+* 两种用法：
+  - 全局严格模式
+  - 局部函数内严格模式（推荐）
+* 就是一行字符串 "use strict",不兼容严格模式的旧浏览器也不会报错。
+* 规则：
+  - 不支持 with(), arguments, callee, func.caller, eval()
+  - 变量赋值前必须声明，否则报错。
+  - 局部this必须被赋值。(Person.call(null/undefined)赋什么值就是什么)，
+  - 拒绝重复属性和参数。
+*/
 
 </script>    
 </body>
