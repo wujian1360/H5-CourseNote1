@@ -5,36 +5,32 @@
 </head>
 <body>
 
-p>lorem
+<!-- p>lorem
 
 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos facilis corporis temporibus fuga similique consequatur. Eum, id, nesciunt? Distinctio corporis illum iusto ipsa quod voluptatem quaerat qui eaque fugit ratione!</p>
 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi tenetur laboriosam non exercitationem cumque esse qui, natus aliquam quia voluptas consequatur dicta dolor voluptatibus a rem quam culpa temporibus mollitia!</p>
 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo iste neque tempora expedita et aspernatur dignissimos veniam, excepturi, recusandae esse aut ipsam laboriosam optio doloribus exercitationem nostrum illum provident blanditiis!</p>
 
 h1.page-header{区域1}
-<h1 class="page-header">区域1</h1>
+<h1 class="page-header">区域1</h1> -->
+<div class="parent-test">
+	<p id='test1'>hello  </p>
+	<p>hello2</p></div>
+
 
 <script>
 
+var test1 = document.getElementById('test1');
+console.dir(test1);
+console.dir(test1.__proto__);
+console.dir(test1.__proto__.__proto__.__proto__.__proto__);
 
-function my(){
-	'use strict';
-	console.log('123');
-}
-
-
-my();
-
-
-
+test1.nodeType;
 
 
 
 
 
 </script>
-
-
-
 </body>
 </html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+
+        //针对figure.jpg，产生自己的分析
+
+        function Foo(){
+            this.name = 'mike';
+            this.say = function(){
+                console.log('我叫',this.name);
+            }
+        }
+        var f1 = new Foo();
+
+        function func1(){
+            console.log('我是一个全局函数1');
+        }
+
+
+
+        /*
+        
+        对象：
+        f1是 构造函数Foo 的一个实例.
+        打印: console.log(f1,    f1 instanceof Foo);
+        输出: 
+        Foo {name: "www123"} 大括号表示这是一个对象
+        true
+
+
+
+        每一个对象都有自己的：
+        .constructor 构造器
+        .prototype 原型
+        .__proto__ 原型指针
+
+        .constructor 构造器，构造函数
+        对象的constructor 属性指向它的构造函数，
+        f1对象的constructor 就是 Foo ==> 数据类型：function
+        打印: f1.constructor
+        输出: 
+        ƒ Foo(){this.name = 'www123';}  
+        ƒ 表示数据类型是function，后面是值：自定义函数文本
+
+
+        .constructor
+        构造函数：是一种特殊的函数，Foo就是一个构造函数。
+        一个对象的.constructor属性，指向它的构造器（构造函数）
+
+        Function()本身就是一个构造函数,所有的构造函数本身就是Function()的实例，
+        每一个构造函数的constructor都是Function它是构造函数的构造函数。
+
+        打印: Function
+        输出: ƒ Function() { [native code] } 系统天然代码
+        打印: Foo.constructor
+        输出: ƒ Function() { [native code] }
+        打印: func1.constructor
+        输出: ƒ Function() { [native code] }
+        构造函数和普通函数一样，都是由Function构造出来的对象。
+
+
+        .prototype 
+        只有函数类型对象才有prototype属性
+        Foo.prototype 首先是一个object对象，它是 Foo构造器 的构造原型
+        f1 也是一个对象，它是由Foo 以 Foo.prototype为原型，再加上一些自定义的属性，生成的对象。
+        打印: Foo.prototype
+        输出: {constructor: ƒ} /object对象，__proto__ 指向Object，constructor指向Foo
+        打印: func1.prototype
+        输出: {constructor: ƒ} /object对象，__proto__ 指向Object，constructor指向func1
+        说明：每个函数都有一个prototype属性生成一个object对象，
+              对构造函数来说，他就是原型。
+              对普通函数来说，他的意义未知
+
+        .__proto__  
+        指向一个对象的原型 ===> Foo.prototype
+        打印: f1.__proto__
+        输出: {constructor: ƒ} /object对象，__proto__ 指向Object，constructor指向Foo
+
+        注意：任何函数作为一个对象，也有__proto__属性，统一指向Function的原型 Function.prototype
+        打印: func1.__proto__
+        输出: ƒ () { [native code] }     /Function.prototype
+
+        函数的构造函数:       ƒ Function() { [native code] }  ===> Function
+        函数的构造函数的原型:  ƒ () { [native code] } ===> Function.prototype
+
+        Object.constructor   ===> ƒ Function() { [native code] }  
+        Object.prototype     ===> {…} ===> Object.prototype 
+        Object.__proto__     ===> ƒ () { [native code] }
+
+        Function.constructor ===> ƒ Function() { [native code] }
+        Function.prototype   ===> ƒ () { [native code] }
+        Function.__proto__   ===> ƒ () { [native code] }
+
+        newObject.constructor ===> ƒ Object() { [native code] }
+        newObject.prototype   ===> undefined
+        newObject.__proto__   ===> Object.prototype
+
+        func1.constructor  ===> Function.constructor ===> ƒ Function() { [native code] }
+        func1.prototype    ===> {constructor: ƒ}
+        func1.__proto__   ===> Function.prototype  ===>  ƒ () { [native code] }    
+
+        */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
