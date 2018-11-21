@@ -229,11 +229,19 @@ console.log(typeof(e));
   - 局部函数内严格模式（推荐）
 * 就是一行字符串 "use strict",不兼容严格模式的旧浏览器也不会报错。
 * 规则：
-  - 不支持 with(), arguments, callee, func.caller, eval()
+  - 不支持 with(调用作用域), arguments(callee, caller),  eval()
   - 变量赋值前必须声明，否则报错。
   - 局部this必须被赋值。(Person.call(null/undefined)赋什么值就是什么)，
   - 拒绝重复属性和参数。
 */
+
+
+function abc(a){
+    "use strict";
+    console.log(arguments);
+   // console.log(arguments.callee);报错
+}
+abc(1);
 
 </script>    
 </body>
