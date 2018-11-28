@@ -25,10 +25,20 @@ console.dir(test1);
 console.dir(test1.__proto__);
 console.dir(test1.__proto__.__proto__.__proto__.__proto__);
 
-test1.nodeType;
+var count = 0;
+function abc(){
+	count += 100;
+	console.log(count);
+}
+abc();
 
-
-
+scope = 'global';
+function scope_test(){
+	console.log(scope);
+	var scope = 'local';
+	console.log(scope);
+}
+scope_test();
 
 
 </script>

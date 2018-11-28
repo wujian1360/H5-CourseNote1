@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+<style>
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+    body{
+        background-color: #f4f4f4;
+
+        color: #3c3c3c; /* 文字颜色 */
+        -webkit-font-smoothing:antialiased; /* 文字消锯齿 */
+
+        font-style: normal;
+        font-variant-ligatures: normal;
+        font-variant-caps: normal;
+        font-variant-numeric: normal;
+        font-variant-east-asian: normal;
+        font-weight: normal;
+        font-stretch: normal;
+        font-size: 12px;
+        line-height: 1.5;
+        font-family: tahoma, arial, "Hiragino Sans GB", 宋体, sans-serif;
+    }
+    body, html{
+        overflow-x: hidden; /*全屏遮罩*/
+    }
+
+    .site-nav .site-nav-menu{
+        float: left;
+    }
+
+    div{
+        display: block;
+    }
+    ul{
+        display: block;
+        -webkit-margin-before: 1em;
+        -webkit-margin-after: 1em;
+        -webkit-margin-start: 0px;
+        -webkit-margin-end: 0px;
+        -webkit-padding-start: 40px;
+        /* 相当于CSS2.0中的
+        display: block;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-right: 0px;
+        margin-left: 0px;
+        padding-left: 40px;
+        */
+        background: #fff;
+    }
+    li {
+        display: list-item;
+        text-align: -webkit-match-parent;/* 匹配父级 */
+    }
+        
+    
+</style>
+
+
+</head>
+<body>
+
+    <div class="cover J_Cover">
+        <div class="site-nav site-nav-status-login" id="J_SiteNav">
+            <div class="site-nav-bd" id="J_SiteNavBd">
+                <ul class="site-nav-bd-l" id="J_SiteNavBdL">
+                    <li class="site-nav-menu">
+                        <div class="site-nav-menu-hd">
+                            <span class="site-nav-region">中国大陆</span>
+                            <span class="site-nav-arrow">
+                                <span class="site-nav-icon"></span>
+                            </span>
+                        </div>
+                    </li>
+                    <li class="site-nav-menu"></li>
+                    <li class="site-nav-menu"></li>
+                    <li class="site-nav-menu"></li>
+                    <li class="site-nav-menu"></li>
+                </ul>
+                <ul class="site-nav-bd-r" id="J_SiteNavBdR"></ul>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

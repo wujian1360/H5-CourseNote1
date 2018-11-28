@@ -1,0 +1,92 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+html,body{
+    width: 100%;
+    height: 100%;
+}
+.wrapper{
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, red 0%, green 100%);
+    background-size: 400%;
+    background-position: 0% 100%;
+    animation: grandient 5s ease-in-out infinite;
+}
+
+.wrapper *{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* 平移 */
+    transform: tanslate3d(-50%,-50%,0);
+}
+
+/* 共同属性 */
+.wrapper .logo{
+    color: aliceblue;
+    font-size: 30px;
+    font-weight: bolder;
+}
+.wrapper .dot{
+    width: 300px;
+    height: 300px;
+    border: 1px solid #000;
+
+}
+.wrapper .dots.animate .dot{
+    animation: box 2.5s ease-in-out;
+}
+.wrapper .dot::after{
+    position: absolute;
+    content: "";
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: aliceblue;
+    transform: scale(0.17);
+}
+/* 选中 */
+.wrapper .dot:nth-child(1){
+    top: 129px;
+    left: -197px;
+}
+.wrapper .dot:nth-child(1)::after{
+    top: 0px;
+    left: 0px;
+    transform-origin: top right;
+    animation-delay: 0s;
+}
+
+.wrapper .dot:nth-child(2),
+.wrapper .dot.dots.animate .dot:nth-child(5)::after{
+    animation-delay: 0.25s;
+}
+
+/* 正方形动画 */
+@keyframes box{
+    0%{
+        transform: rotateZ(0deg);
+    }
+    100%{
+        transform: rotateZ(360deg);
+    }
+}
+
+
+/* 小球动画 */
+
+/* 设置关键帧动画 */
+@keyframes grandient{
+    0%{
+        background-position: 0% 100%;
+    }
+    50%{
+        background-position: 100% 0%;
+    }
+    100%{
+        background-position: 0% 100%;
+    }
+}
